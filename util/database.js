@@ -54,6 +54,13 @@ const animalsDatabase = [
     type: 'Wombat',
     accessory: 'Cane',
   },
+  {
+    id: '8',
+    name: 'Lulu',
+    age: 21,
+    type: 'Dog',
+    accessory: 'Cane',
+  },
 ];
 
 export default animalsDatabase;
