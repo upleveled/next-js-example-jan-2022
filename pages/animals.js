@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Layout from '../components/Layout';
 import { getParsedCookie, setParsedCookie } from '../util/cookies';
-import animalsDatabase from '../util/database';
+import { getAnimals } from '../util/database';
 
 const animalStyles = css`
   border-radius: 5px;
@@ -80,7 +80,7 @@ export default function Animals(props) {
             {/* Dynamic link, eg. /animals/1, /animals/2, etc */}
             <Link href={`/animals/${animal.id}`}>
               <a>
-                {animal.name} is a {animal.type} with a {animal.accessory}
+                {animal.firstName} is a {animal.type} with a {animal.accessory}
               </a>
             </Link>{' '}
             <button onClick={() => toggleAnimalLike(animal.id)}>
@@ -101,24 +101,25 @@ export default function Animals(props) {
 // getServerSideProps is exported from your files
 // (ONLY FILES IN /pages) and gets imported
 // by Next.js
-export function getServerSideProps(context) {
-  const likedAnimalsOnCookies = context.req.cookies.likedAnimals || '[]';
-
+export async function getServerSideProps(context) {
+  // 1. get the cookies from the browser
+  // 2. pass the cookies to the frontend
+  const likedAnimalsFromCookies = context.req.cookies.likedAnimals || '[]';
   // if there is no likedAnimals cookie on the browser we store to an [] otherwise we get the cooke value and parse it
-  const likedAnimals = JSON.parse(likedAnimalsOnCookies);
+  const likedAnimals = JSON.parse(likedAnimalsFromCookies);
+
+  const animals = await getAnimals();
+
   // Important:
   // - Always return an object from getServerSideProps
   // - Always return a key in that object that is
   // called props
-
-  // 1. get the cookies from the browser
-  // 2. pass the cookies to the frontend
   return {
     props: {
       // In the props object, you can pass back
       // whatever information you want
       likedAnimals: likedAnimals,
-      animals: animalsDatabase,
+      animals: animals,
     },
   };
 }
