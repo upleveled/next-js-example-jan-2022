@@ -14,7 +14,6 @@ const animalStyles = css`
 `;
 
 export default function Animals(props) {
-  const [likedArray, setLikedArray] = useState(props.likedAnimals);
   // This will not work, because
   // your component will also run in
   // the browser, and the browser
@@ -26,33 +25,6 @@ export default function Animals(props) {
   //   fs.readFileSync('./about.js');
   // }, []);
 
-  function toggleAnimalLike(id) {
-    // 1. get the value of the cookie
-    const cookieValue = getParsedCookie('likedAnimals') || [];
-
-    // 2. update the cooke
-    const existIdOnArray = cookieValue.some((cookieObject) => {
-      return cookieObject.id === id;
-    });
-
-    let newCookie;
-    if (existIdOnArray) {
-      //  CASE = when the id is in the array => delete item
-      //  cookieValue  [{id:3},{id:5} ]
-      newCookie = cookieValue.filter((cookieObject) => {
-        return cookieObject.id !== id;
-      });
-    } else {
-      //  CASE = when the id is not in the array => add item
-      //  cookieValue  [{id:3, stars: 5 },{id:5, stars: 12 }]
-      newCookie = [...cookieValue, { id: id, stars: 0 }];
-    }
-
-    // 3. set the new value of the cookie
-    setLikedArray(newCookie);
-    setParsedCookie('likedAnimals', newCookie);
-  }
-
   return (
     <Layout>
       <Head>
@@ -61,20 +33,6 @@ export default function Animals(props) {
       </Head>
       <h1>Animals</h1>
       {props.animals.map((animal) => {
-        // animal =  {
-        //   id: '1',
-        //   name: 'Tiny',
-        //   age: 47,
-        //   type: 'Dragon',
-        //   accessory: 'Monacle',
-        // },
-
-        // likedAnimals = [{ id: "1" }, { id: "2" }];
-
-        const animalIsLiked = likedArray.some((likedObject) => {
-          return likedObject.id === animal.id;
-        });
-
         return (
           <div key={`animal-${animal.id}`} css={animalStyles}>
             {/* Dynamic link, eg. /animals/1, /animals/2, etc */}
@@ -83,9 +41,6 @@ export default function Animals(props) {
                 {animal.firstName} is a {animal.type} with a {animal.accessory}
               </a>
             </Link>{' '}
-            <button onClick={() => toggleAnimalLike(animal.id)}>
-              {animalIsLiked ? '🧡' : '🖤'}
-            </button>
           </div>
         );
       })}
@@ -101,13 +56,7 @@ export default function Animals(props) {
 // getServerSideProps is exported from your files
 // (ONLY FILES IN /pages) and gets imported
 // by Next.js
-export async function getServerSideProps(context) {
-  // 1. get the cookies from the browser
-  // 2. pass the cookies to the frontend
-  const likedAnimalsFromCookies = context.req.cookies.likedAnimals || '[]';
-  // if there is no likedAnimals cookie on the browser we store to an [] otherwise we get the cooke value and parse it
-  const likedAnimals = JSON.parse(likedAnimalsFromCookies);
-
+export async function getServerSideProps() {
   const animals = await getAnimals();
 
   // Important:
@@ -118,7 +67,6 @@ export async function getServerSideProps(context) {
     props: {
       // In the props object, you can pass back
       // whatever information you want
-      likedAnimals: likedAnimals,
       animals: animals,
     },
   };

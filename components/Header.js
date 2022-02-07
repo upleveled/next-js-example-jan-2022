@@ -24,6 +24,9 @@ export default function Header() {
       <Link href="/animals">
         <a>Animals</a>
       </Link>
+      <Link href="/animals-cookie-lecture">
+        <a>Animals/cookies-lecture</a>
+      </Link>
     </header>
   );
 }
