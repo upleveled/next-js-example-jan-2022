@@ -1,41 +1,9 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useState } from 'react';
 import Layout from '../../components/Layout';
-import { getParsedCookie, setParsedCookie } from '../../util/cookies';
 import { getAnimalById } from '../../util/database';
 
 export default function SingleAnimal(props) {
-  const [likedArray, setLikedArray] = useState(props.likedAnimals);
-
-  // [{"id":"1","stars":0},{"id":"2","stars":0}]
-  const currentAnimalObject = likedArray.find(
-    (cookieObject) => cookieObject.id === props.animal.id,
-  );
-
-  console.log(currentAnimalObject);
-
-  function starsCountUp() {
-    // because we render the button only when is liked then we can be sure the object is always on the cooke
-    console.log('stars up');
-    // 1. get the current cookie value
-    const cookieValue = getParsedCookie('likedAnimals') || [];
-    // 2. update the stars count to +1
-    const newCookie = cookieValue.map((cookieObject) => {
-      // if is the object of the animal on this page update stars
-      if (cookieObject.id === props.animal.id) {
-        return { ...cookieObject, stars: cookieObject.stars + 1 };
-      } else {
-        // if is not the object of the animal on this page don't do anything
-        return cookieObject;
-      }
-    });
-
-    // 3. update cookie and state
-    setLikedArray(newCookie);
-    setParsedCookie('likedAnimals', newCookie);
-  }
-
   return (
     <Layout>
       <Head>
@@ -59,13 +27,6 @@ export default function SingleAnimal(props) {
       <div>age: {props.animal.age}</div>
       <div>type: {props.animal.type}</div>
       <div>accessory: {props.animal.accessory}</div>
-      {currentAnimalObject ? (
-        <button onClick={() => starsCountUp()}>
-          stars: {currentAnimalObject.stars}{' '}
-        </button>
-      ) : (
-        'not followed'
-      )}
     </Layout>
   );
 }
@@ -73,12 +34,7 @@ export default function SingleAnimal(props) {
 // The parameter `context` gets passed from Next.js
 // and includes a bunch of information about the
 // request
-export async function getServerSideProps(context) {
-  const likedAnimalsOnCookies = context.req.cookies.likedAnimals || '[]';
-
-  // if there is no likedAnimals cookie on the browser we store to an [] otherwise we get the cooke value and parse it
-  const likedAnimals = JSON.parse(likedAnimalsOnCookies);
-
+export async function getServerSideProps() {
   // This is the variable that we get from the URL
   // (anything after the slash)
   const animalId = context.query.animalId;
@@ -86,7 +42,6 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      likedAnimals,
       animal: animal,
       // animalId: animalId,
     },
