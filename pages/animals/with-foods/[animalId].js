@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import Layout from '../../components/Layout';
-import { getAnimalById } from '../../util/database';
+import Layout from '../../../components/Layout';
+import { getAnimalWithFoodsById } from '../../../util/database';
 
 export default function SingleAnimal(props) {
   return (
@@ -27,23 +27,38 @@ export default function SingleAnimal(props) {
       <div>age: {props.animal.age}</div>
       <div>type: {props.animal.type}</div>
       <div>accessory: {props.animal.accessory}</div>
+      <div>
+        favorite foods:{' '}
+        {props.animal.foods.map((food) => (
+          <span key={`food-${food.id}`}>{food.name}&nbsp;&nbsp;&nbsp;</span>
+        ))}
+      </div>
     </Layout>
   );
 }
 
-// The parameter `context` gets passed from Next.js
-// and includes a bunch of information about the
-// request
 export async function getServerSideProps(context) {
-  // This is the variable that we get from the URL
-  // (anything after the slash)
   const animalId = context.query.animalId;
-  const animal = await getAnimalById(animalId);
+  const animalFavoriteFoods = await getAnimalWithFoodsById(animalId);
+
+  const animal = {
+    id: animalFavoriteFoods[0].animalId,
+    firstName: animalFavoriteFoods[0].animalFirstName,
+    age: animalFavoriteFoods[0].animalAge,
+    type: animalFavoriteFoods[0].animalType,
+    accessory: animalFavoriteFoods[0].animalAccessory,
+    foods: animalFavoriteFoods.map((animalFavoriteFood) => {
+      return {
+        id: animalFavoriteFood.foodId,
+        name: animalFavoriteFood.foodName,
+        type: animalFavoriteFood.foodType,
+      };
+    }),
+  };
 
   return {
     props: {
       animal: animal,
-      // animalId: animalId,
     },
   };
 }

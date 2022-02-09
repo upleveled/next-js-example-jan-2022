@@ -1,23 +1,27 @@
 const animals = [
   {
+    // id: 1,
     first_name: 'Tiny',
     age: 47,
     type: 'Dragon',
     accessory: 'Monacle',
   },
   {
+    // id: 2,
     first_name: 'Pete',
     age: 4,
     type: 'Iguana',
     accessory: 'Top Hat',
   },
   {
+    // id: 3,
     first_name: 'Randolph',
     age: 9,
     type: 'Parakeet',
     accessory: 'Ring',
   },
   {
+    // id: 4,
     first_name: 'George',
     age: 2,
     type: 'Tiger',

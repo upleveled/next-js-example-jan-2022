@@ -36,6 +36,72 @@ export async function getAnimalById(id) {
   return camelcaseKeys(animal);
 }
 
+// Example of a join query
+export async function getAnimalWithFoodsById(animalId) {
+  const animalFavoriteFoods = await sql`
+    SELECT
+      -- Specify all information from tables
+      animals.id as animal_id,
+      animals.first_name as animal_first_name,
+      animals.age as animal_age,
+      animals.type as animal_type,
+      animals.accessory as animal_accessory,
+      foods.id as food_id,
+      foods.name as food_name,
+      foods.type as food_type
+    FROM
+      -- Specify all of the tables that you need information from
+      animals,
+      animal_favorite_foods,
+      foods
+    WHERE
+      -- "Join" the tables together
+      animals.id = ${animalId} AND
+      animals.id = animal_favorite_foods.animal_id AND
+      animal_favorite_foods.food_id = foods.id
+  `;
+  return animalFavoriteFoods.map((animalFavoriteFood) =>
+    camelcaseKeys(animalFavoriteFood),
+  );
+}
+
+export async function createAnimal(firstName, age, type, accessory) {
+  const [animal] = await sql`
+    INSERT INTO animals
+      (first_name, age, type, accessory)
+    VALUES
+      (${firstName}, ${age}, ${type}, ${accessory})
+    RETURNING *
+  `;
+  return camelcaseKeys(animal);
+}
+
+export async function updateAnimalById(id, firstName, age, type) {
+  const [animal] = await sql`
+    UPDATE
+      animals
+    SET
+      first_name = ${firstName},
+      age = ${age},
+      type = ${type}
+    WHERE
+      id = ${id}
+    RETURNING *
+  `;
+  return camelcaseKeys(animal);
+}
+
+export async function deleteAnimalById(id) {
+  const [animal] = await sql`
+    DELETE FROM
+      animals
+    WHERE
+      id = ${id}
+    RETURNING *
+  `;
+  return camelcaseKeys(animal);
+}
+
 // const animalsDatabase = [
 //   {
 //     id: '1',

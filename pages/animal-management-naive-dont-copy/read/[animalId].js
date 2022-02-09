@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import Layout from '../../components/Layout';
-import { getAnimalById } from '../../util/database';
+import Layout from '../../../components/Layout';
+import { getAnimalById } from '../../../util/database';
 
 export default function SingleAnimal(props) {
   return (

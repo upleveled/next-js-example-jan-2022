@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from '../components/Layout';
-import { getAnimals } from '../util/database';
+import Layout from '../../../components/Layout';
+import { getAnimals } from '../../../util/database';
 
 const animalStyles = css`
   border-radius: 5px;
@@ -34,7 +34,7 @@ export default function Animals(props) {
         return (
           <div key={`animal-${animal.id}`} css={animalStyles}>
             {/* Dynamic link, eg. /animals/1, /animals/2, etc */}
-            <Link href={`/animals/${animal.id}`}>
+            <Link href={`/animal-management-naive-dont-copy/read/${animal.id}`}>
               <a>
                 {animal.firstName} is a {animal.type} with a {animal.accessory}
               </a>
