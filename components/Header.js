@@ -19,13 +19,16 @@ export default function Header() {
         <a>Home</a>
       </Link>
       <Link href="/about">
-        <a>About</a>
+        <a data-test-id="header-about-link">About</a>
       </Link>
       <Link href="/animals">
-        <a>Animals</a>
+        <a data-test-id="header-animals-link">Animals</a>
       </Link>
       <Link href="/animals-cookie-lecture">
         <a>Animals/cookies-lecture</a>
+      </Link>
+      <Link href="/animal-management-naive-dont-copy">
+        <a data-test-id="header-management-link">Management Naive</a>
       </Link>
     </header>
   );

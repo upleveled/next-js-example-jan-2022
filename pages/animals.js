@@ -32,7 +32,14 @@ export default function Animals(props) {
       <h1>Animals</h1>
       {props.animals.map((animal) => {
         return (
-          <div key={`animal-${animal.id}`} css={animalStyles}>
+          <div
+            key={`animal-${animal.id}`}
+            css={animalStyles}
+            data-test-id={`animals-page-animal-${animal.id}`}
+            // Don't copy this! Use only a single
+            // data-test-id
+            data-test-id-alternative="animals-page-animal"
+          >
             {/* Dynamic link, eg. /animals/1, /animals/2, etc */}
             <Link href={`/animals/${animal.id}`}>
               <a>
