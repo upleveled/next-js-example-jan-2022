@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Layout from '../../../components/Layout';
 import { getAnimalWithFoodsById } from '../../../util/database';
+import { getReducedAnimalWithFoods } from '../../../util/dataStructures';
 
 export default function SingleAnimal(props) {
   return (
@@ -40,21 +41,9 @@ export default function SingleAnimal(props) {
 export async function getServerSideProps(context) {
   const animalId = context.query.animalId;
   const animalFavoriteFoods = await getAnimalWithFoodsById(animalId);
+  console.log(animalFavoriteFoods);
 
-  const animal = {
-    id: animalFavoriteFoods[0].animalId,
-    firstName: animalFavoriteFoods[0].animalFirstName,
-    age: animalFavoriteFoods[0].animalAge,
-    type: animalFavoriteFoods[0].animalType,
-    accessory: animalFavoriteFoods[0].animalAccessory,
-    foods: animalFavoriteFoods.map((animalFavoriteFood) => {
-      return {
-        id: animalFavoriteFood.foodId,
-        name: animalFavoriteFood.foodName,
-        type: animalFavoriteFood.foodType,
-      };
-    }),
-  };
+  const animal = getReducedAnimalWithFoods(animalFavoriteFoods);
 
   return {
     props: {

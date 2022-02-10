@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reduces animal favorite foods 1`] = `
+Object {
+  "accessory": "Top Hat",
+  "age": 4,
+  "firstName": "Pete",
+  "foods": Array [
+    Object {
+      "id": 3,
+      "name": "Cupcakes",
+      "type": "Cake",
+    },
+    Object {
+      "id": 4,
+      "name": "Burritos",
+      "type": "Mexican",
+    },
+  ],
+  "id": 2,
+  "type": "Iguana",
+}
+`;
