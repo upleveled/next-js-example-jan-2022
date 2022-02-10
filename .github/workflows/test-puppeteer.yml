@@ -8,6 +8,12 @@ jobs:
     # version of Ubuntu (a Linux flavor)
     # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     runs-on: ubuntu-latest
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGDATABASE: next_js_example_jan_2022
+      PGUSERNAME: next_js_example_jan_2022
+      PGPASSWORD: next_js_example_jan_2022
     steps:
       # Use preinstalled PostgreSQL
       - name: Start PostgreSQL on Ubuntu
@@ -37,9 +43,3 @@ jobs:
       - run: yarn build
       # Run the Jest unit tests
       - run: yarn jest --config integration/jest.config.mjs
-        env:
-          PGHOST: localhost
-          PGPORT: 5432
-          PGDATABASE: next_js_example_jan_2022
-          PGUSERNAME: next_js_example_jan_2022
-          PGPASSWORD: next_js_example_jan_2022
