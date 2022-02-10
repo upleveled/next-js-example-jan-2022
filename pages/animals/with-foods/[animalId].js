@@ -41,7 +41,6 @@ export default function SingleAnimal(props) {
 export async function getServerSideProps(context) {
   const animalId = context.query.animalId;
   const animalFavoriteFoods = await getAnimalWithFoodsById(animalId);
-  console.log(animalFavoriteFoods);
 
   const animal = getReducedAnimalWithFoods(animalFavoriteFoods);
 
