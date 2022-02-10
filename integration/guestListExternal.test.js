@@ -1,6 +1,6 @@
 // import 'expect-puppeteer';
 /* global page */
-const baseUrl = 'https://modest-noyce-77df12.netlify.app/';
+const baseUrl = 'https://modest-noyce-77df12.netlify.app';
 
 describe('app navigation', () => {
   // beforeEach(async () => {
