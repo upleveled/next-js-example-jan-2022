@@ -1,9 +1,9 @@
-name: Jest tests
+name: Puppeteer tests
 on: push
 
 jobs:
   build:
-    name: yarn jest
+    name: Puppeteer tests
     # Tell the action to use the latest
     # version of Ubuntu (a Linux flavor)
     # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
