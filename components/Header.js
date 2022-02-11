@@ -30,6 +30,9 @@ export default function Header() {
       <Link href="/animal-management-naive-dont-copy">
         <a data-test-id="header-management-link">Management Naive</a>
       </Link>
+      <Link href="/animal-api-frontend">
+        <a data-test-id="header-management-link">API Frontend</a>
+      </Link>
     </header>
   );
 }
