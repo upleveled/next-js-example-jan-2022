@@ -25,4 +25,4 @@ test('should show the home page message', async () => {
   // 1. Add the last name text (like above)
   // 2. Click on the "Add Guest" button (like in the other test file)
   // 3. Check the page for the guest text (like in the other file)
-});
+}, 30000); // 30 seconds timeout to allow for Heroku to wake up
