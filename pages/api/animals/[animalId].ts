@@ -8,11 +8,12 @@ import {
   updateAnimalById,
 } from '../../../util/database';
 
+type AnimalRequestBody = {
+  animal: Animal;
+};
+
 type AnimalNextApiRequest = NextApiRequest & {
-  // When you are implementing, add an animal property here
-  body: {
-    animal: Animal;
-  };
+  body: AnimalRequestBody;
 };
 
 type AnimalResponseBody =
