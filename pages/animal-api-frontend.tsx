@@ -1,29 +1,40 @@
 import Head from 'next/head';
 import { Fragment, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import { Animal } from '../util/database';
+import { AnimalsResponseBodyGet } from './api/animals';
+import { AnimalResponseBody } from './api/animals/[animalId]';
 
 export default function About() {
-  const [animals, setAnimals] = useState([]);
+  const [animals, setAnimals] = useState<Animal[]>([]);
   const [name, setName] = useState('');
   const [age, setAge] = useState(1);
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
 
   // State Variable with the id of the animal on editMode
-  const [idEditAnimalId, setOnEditAnimalId] = useState();
+  const [idEditAnimalId, setOnEditAnimalId] = useState<number>();
   // State Variables for the on Edit inputs
   const [nameOnEdit, setNameOnEdit] = useState('');
   const [ageOnEdit, setAgeOnEdit] = useState(1);
   const [typeOnEdit, setTypeOnEdit] = useState('');
 
-  async function deleteAnimal(id) {
-    const response = await fetch(`/api/animals/${id}`, {
+  const [error, setError] = useState('');
+
+  async function deleteAnimal(id: number) {
+    const deleteResponse = await fetch(`/api/animals/${id}`, {
       method: 'DELETE',
     });
-    const deletedAnimal = await response.json();
+    const deleteResponseBody =
+      (await deleteResponse.json()) as AnimalResponseBody;
+
+    if ('error' in deleteResponseBody) {
+      setError(deleteResponseBody.error);
+      return;
+    }
 
     const newAnimalsList = animals.filter((animal) => {
-      return deletedAnimal.id !== animal.id;
+      return deleteResponseBody.animal.id !== animal.id;
     });
 
     setAnimals(newAnimalsList);
@@ -34,7 +45,8 @@ export default function About() {
       console.log('I need more data to create');
       return;
     }
-    const response = await fetch(`/api/animals/`, {
+
+    const createResponse = await fetch(`/api/animals/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -46,19 +58,26 @@ export default function About() {
         accessory: accessory,
       }),
     });
-    const createdAnimal = await response.json();
 
-    const newAnimalsList = [...animals, createdAnimal];
+    const createResponseBody =
+      (await createResponse.json()) as AnimalResponseBody;
+
+    if ('error' in createResponseBody) {
+      setError(createResponseBody.error);
+      return;
+    }
+
+    const newAnimalsList = [...animals, createResponseBody.animal];
 
     setAnimals(newAnimalsList);
   }
 
-  async function updateAnimal(id) {
+  async function updateAnimal(id: number) {
     if (!nameOnEdit || !ageOnEdit || !typeOnEdit) {
       console.log('I need more data to update');
       return;
     }
-    const response = await fetch(`/api/animals/${id}`, {
+    const putResponse = await fetch(`/api/animals/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -69,11 +88,16 @@ export default function About() {
         type: typeOnEdit,
       }),
     });
-    const updatedAnimal = await response.json();
+    const putResponseBody = (await putResponse.json()) as AnimalResponseBody;
+
+    if ('error' in putResponseBody) {
+      setError(putResponseBody.error);
+      return;
+    }
 
     const updatedAnimalList = animals.map((animal) => {
-      if (animal.id === updatedAnimal.id) {
-        return updatedAnimal;
+      if (animal.id === putResponseBody.animal.id) {
+        return putResponseBody.animal;
       } else {
         return animal;
       }
@@ -84,13 +108,28 @@ export default function About() {
 
   useEffect(() => {
     const getAnimals = async () => {
-      const response = await fetch('/api/animals');
-      const animalArray = await response.json();
-      setAnimals(animalArray);
+      const readResponse = await fetch('/api/animals');
+      const readResponseBody =
+        (await readResponse.json()) as AnimalsResponseBodyGet;
+      setAnimals(readResponseBody.animals);
     };
 
     getAnimals().catch(() => {});
   }, []);
+
+  if (error) {
+    return (
+      <Layout>
+        <Head>
+          <title>Error</title>
+          <meta name="description" content="This is the frontend of my api" />
+        </Head>
+
+        <h1>Error</h1>
+        {error}
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -112,7 +151,7 @@ export default function About() {
       <label>
         Age:
         <input
-          onChange={(event) => setAge(event.currentTarget.value)}
+          onChange={(event) => setAge(parseInt(event.currentTarget.value))}
           value={age}
           type="number"
         />
@@ -135,6 +174,7 @@ export default function About() {
       </label>
       <button onClick={() => createAnimal()}>Create Animal</button>
       <br />
+
       {animals.map((animal) => {
         const isDisabled = idEditAnimalId !== animal.id;
         return (
@@ -148,7 +188,9 @@ export default function About() {
             />
             <input
               type="number"
-              onChange={(event) => setAgeOnEdit(event.currentTarget.value)}
+              onChange={(event) =>
+                setAgeOnEdit(parseInt(event.currentTarget.value))
+              }
               value={isDisabled ? animal.age : ageOnEdit}
               disabled={isDisabled}
             />
@@ -158,6 +200,7 @@ export default function About() {
               disabled={isDisabled}
             />
             <span>{animal.accessory} </span>
+
             {isDisabled ? (
               <button
                 onClick={() => {

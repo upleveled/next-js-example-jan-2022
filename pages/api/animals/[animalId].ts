@@ -16,12 +16,7 @@ type AnimalNextApiRequest = NextApiRequest & {
   body: AnimalRequestBody;
 };
 
-type AnimalResponseBody =
-  | { error: string }
-  | {
-      message: string;
-    }
-  | { animal: Animal };
+export type AnimalResponseBody = { error: string } | { animal: Animal };
 
 export default async function handler(
   request: AnimalNextApiRequest,
@@ -45,7 +40,7 @@ export default async function handler(
     // check if there is not animal with the id passed into the database
     console.log(animal);
     if (!animal) {
-      response.status(404).json({ message: 'animal not found' });
+      response.status(404).json({ error: 'animal not found' });
       return;
     }
 
@@ -68,7 +63,7 @@ export default async function handler(
     );
 
     if (!updatedAnimal) {
-      response.status(404).json({ message: 'animal not found' });
+      response.status(404).json({ error: 'animal not found' });
       return;
     }
 
@@ -79,7 +74,7 @@ export default async function handler(
     const deletedAnimal = await deleteAnimalById(animalId);
 
     if (!deletedAnimal) {
-      response.status(404).json({ message: 'animal not found' });
+      response.status(404).json({ error: 'animal not found' });
       return;
     }
 

@@ -1,8 +1,26 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { createAnimal, getAnimals } from '../../../util/database';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Animal, createAnimal, getAnimals } from '../../../util/database';
 
-export default async function handler(request, response) {
+type AnimalsRequestBody = {};
+
+type AnimalsNextApiRequest = NextApiRequest & {
+  body: AnimalsRequestBody;
+};
+
+export type AnimalsResponseBodyGet = {
+  animals: Animal[];
+};
+
+export type AnimalsResponseBodyPost = { error: string } | { animal: Animal };
+
+type AnimalsResponseBody = AnimalsResponseBodyGet | AnimalsResponseBodyPost;
+
+export default async function handler(
+  request: AnimalsNextApiRequest,
+  response: NextApiResponse<AnimalsResponseBody>,
+) {
   console.log('request Method', request.method);
   console.log('request Body', request.body);
 
@@ -12,7 +30,7 @@ export default async function handler(request, response) {
 
     const animals = await getAnimals();
 
-    response.status(200).json(animals);
+    response.status(200).json({ animals: animals });
     return;
   }
 
@@ -31,7 +49,7 @@ export default async function handler(request, response) {
       animalFromRequest.accessory,
     );
 
-    response.status(200).json(newAnimal);
+    response.status(200).json({ animal: newAnimal });
     return;
   }
 
