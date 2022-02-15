@@ -11,7 +11,8 @@ export default function CreateAnimal(props) {
           Created {props.animal.firstName} ({props.animal.type})
         </title>
         <meta
-          description={`${props.animal.firstName} is a newly-created ${props.animal.type} with a ${props.animal.accessory}`}
+          name="description"
+          content={`${props.animal.firstName} is a newly-created ${props.animal.type} with a ${props.animal.accessory}`}
         />
       </Head>
       <h1>Created animal</h1>
@@ -39,7 +40,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      animal: animal || null,
+      animal: animal,
     },
   };
 }

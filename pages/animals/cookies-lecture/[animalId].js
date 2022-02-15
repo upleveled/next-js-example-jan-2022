@@ -99,7 +99,8 @@ export default function SingleAnimal(props) {
           {props.animal.firstName} ({props.animal.type})
         </title>
         <meta
-          description={`${props.animal.firstName} is a ${props.animal.type} with a ${props.animal.accessory}`}
+          name="description"
+          content={`${props.animal.firstName} is a ${props.animal.type} with a ${props.animal.accessory}`}
         />
       </Head>
       <h1>

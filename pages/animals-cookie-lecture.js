@@ -105,7 +105,10 @@ export default function AnimalsCookieLecture(props) {
     <Layout>
       <Head>
         <title>Animals</title>
-        <meta description="A list of animals and their accessories" />
+        <meta
+          name="description"
+          content="A list of animals and their accessories"
+        />
       </Head>
       <h1>Animals</h1>
       {props.animals.map((animal) => {

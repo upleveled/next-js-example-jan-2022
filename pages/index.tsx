@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import vercelLogo from '../public/vercel.svg';
 import { getLocalStorage, setLocalStorage } from '../util/localStorage';
 
-const divStyle = (darkMode) => {
+const divStyle = (darkMode: boolean) => {
   return css`
     background-color: ${darkMode ? 'transparent' : 'black'};
     color: ${darkMode ? 'black' : 'white'};
@@ -18,6 +18,18 @@ export default function Home() {
   // if localStorage is undefined or darkMode dont exist is going to return false
 
   const [darkMode, setDarkMode] = useState(false);
+
+  // TypeScript: using the generic parameter of useState
+  // to tell TS about another type in the future
+  const [userId, setUserId] = useState<number>();
+  function changeUserId(id: number) {
+    setUserId(id);
+  }
+  // Avoid error if userId is undefined
+  if (typeof userId === 'number') {
+    const multipliedUserId = userId * 2;
+    changeUserId(multipliedUserId);
+  }
 
   function darkModeToggle() {
     // 1. updating state

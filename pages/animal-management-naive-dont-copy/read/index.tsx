@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../../../components/Layout';
-import { getAnimals } from '../../../util/database';
+import { Animal, getAnimals } from '../../../util/database';
 
 const animalStyles = css`
   border-radius: 5px;
@@ -11,7 +11,11 @@ const animalStyles = css`
   margin-bottom: 20px;
 `;
 
-export default function Animals(props) {
+type Props = {
+  animals: Animal[];
+};
+
+export default function Animals(props: Props) {
   // This will not work, because
   // your component will also run in
   // the browser, and the browser
@@ -27,7 +31,10 @@ export default function Animals(props) {
     <Layout>
       <Head>
         <title>Animals</title>
-        <meta description="A list of animals and their accessories" />
+        <meta
+          name="description"
+          content="A list of animals and their accessories"
+        />
       </Head>
       <h1>Animals</h1>
       {props.animals.map((animal) => {

@@ -1,9 +1,14 @@
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Layout from '../../components/Layout';
-import { getAnimalById } from '../../util/database';
+import { Animal, getAnimalById } from '../../util/database';
 
-export default function SingleAnimal(props) {
+type Props = {
+  animal: Animal;
+};
+
+export default function SingleAnimal(props: Props) {
   return (
     <Layout>
       <Head>
@@ -11,7 +16,8 @@ export default function SingleAnimal(props) {
           {props.animal.firstName} ({props.animal.type})
         </title>
         <meta
-          description={`${props.animal.firstName} is a ${props.animal.type} with a ${props.animal.accessory}`}
+          name="description"
+          content={`${props.animal.firstName} is a ${props.animal.type} with a ${props.animal.accessory}`}
         />
       </Head>
       <h1>
@@ -34,11 +40,19 @@ export default function SingleAnimal(props) {
 // The parameter `context` gets passed from Next.js
 // and includes a bunch of information about the
 // request
-export async function getServerSideProps(context) {
+export async function getServerSideProps(
+  context: GetServerSidePropsContext,
+): Promise<GetServerSidePropsResult<{ animal?: Animal }>> {
   // This is the variable that we get from the URL
   // (anything after the slash)
   const animalId = context.query.animalId;
-  const animal = await getAnimalById(animalId);
+
+  // Animal id is not correct type
+  if (!animalId || Array.isArray(animalId)) {
+    return { props: {} };
+  }
+
+  const animal = await getAnimalById(parseInt(animalId));
 
   return {
     props: {

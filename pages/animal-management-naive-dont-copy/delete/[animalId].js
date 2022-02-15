@@ -11,7 +11,7 @@ export default function DeleteAnimal(props) {
       <Layout>
         <Head>
           <title>Animal not found</title>
-          <meta description="Animal not found" />
+          <meta name="description" content="Animal not found" />
         </Head>
         <h1>Animal not found</h1>
         Better luck next time
@@ -26,7 +26,8 @@ export default function DeleteAnimal(props) {
           Deleting {props.animal.firstName} ({props.animal.type})...
         </title>
         <meta
-          description={`${props.animal.firstName} was a ${props.animal.type} with a ${props.animal.accessory}`}
+          name="description"
+          content={`${props.animal.firstName} was a ${props.animal.type} with a ${props.animal.accessory}`}
         />
       </Head>
       <h1>

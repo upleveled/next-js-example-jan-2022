@@ -1,12 +1,31 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
+  Animal,
   deleteAnimalById,
   getAnimalById,
   updateAnimalById,
 } from '../../../util/database';
 
-export default async function handler(request, response) {
+type AnimalNextApiRequest = NextApiRequest & {
+  // When you are implementing, add an animal property here
+  body: {
+    animal: Animal;
+  };
+};
+
+type AnimalResponseBody =
+  | { error: string }
+  | {
+      message: string;
+    }
+  | { animal: Animal };
+
+export default async function handler(
+  request: AnimalNextApiRequest,
+  response: NextApiResponse<AnimalResponseBody>,
+) {
   console.log('is this the id', request.query.animalId);
 
   const animalId = Number(request.query.animalId);
@@ -30,11 +49,9 @@ export default async function handler(request, response) {
     }
 
     // if the method is GET return the animal with the matched id
-    response.status(200).json(animal);
+    response.status(200).json({ animal: animal });
     return;
-  }
-
-  if (request.method === 'PUT') {
+  } else if (request.method === 'PUT') {
     // if the method is PUT update the animal and response the updated animal
 
     // access the body animal from the request object
@@ -49,15 +66,23 @@ export default async function handler(request, response) {
       animalFromRequest.type,
     );
 
-    response.status(200).json(updatedAnimal);
-    return;
-  }
+    if (!updatedAnimal) {
+      response.status(404).json({ message: 'animal not found' });
+      return;
+    }
 
-  if (request.method === 'DELETE') {
+    response.status(200).json({ animal: updatedAnimal });
+    return;
+  } else if (request.method === 'DELETE') {
     // if the method is DELETE delete the animal matching the id and response the deleted animal
     const deletedAnimal = await deleteAnimalById(animalId);
 
-    response.status(200).json(deletedAnimal);
+    if (!deletedAnimal) {
+      response.status(404).json({ message: 'animal not found' });
+      return;
+    }
+
+    response.status(200).json({ animal: deletedAnimal });
     return;
   }
 

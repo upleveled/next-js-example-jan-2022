@@ -7,7 +7,7 @@ export default function ManagementNaive() {
     <Layout>
       <Head>
         <title>Animal Management Naive Don't Copy</title>
-        <meta description="Don't copy me" />
+        <meta name="description" content="Don't copy me" />
       </Head>
 
       <ul>
