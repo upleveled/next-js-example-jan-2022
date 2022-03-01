@@ -32,9 +32,7 @@ export default async function handler(
 
     response.status(200).json({ animals: animals });
     return;
-  }
-
-  if (request.method === 'POST') {
+  } else if (request.method === 'POST') {
     // if the post create a new animal and response the new created animal
 
     // access the body animal from the request object
