@@ -3,9 +3,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Animal, createAnimal, getAnimals } from '../../../util/database';
 
-type AnimalsRequestBody = {};
+type AnimalsRequestBody = { animal: Omit<Animal, 'id'> };
 
-type AnimalsNextApiRequest = NextApiRequest & {
+type AnimalsNextApiRequest = Omit<NextApiRequest, 'body'> & {
   body: AnimalsRequestBody;
 };
 
@@ -36,7 +36,7 @@ export default async function handler(
     // if the post create a new animal and response the new created animal
 
     // access the body animal from the request object
-    const animalFromRequest = request.body;
+    const animalFromRequest = request.body.animal;
 
     // TODO: create error responses when the body don't have the full data. with a 400 status code
 

@@ -12,7 +12,7 @@ type AnimalRequestBody = {
   animal: Animal;
 };
 
-type AnimalNextApiRequest = NextApiRequest & {
+type AnimalNextApiRequest = Omit<NextApiRequest, 'body'> & {
   body: AnimalRequestBody;
 };
 
@@ -51,7 +51,7 @@ export default async function handler(
     // if the method is PUT update the animal and response the updated animal
 
     // access the body animal from the request object
-    const animalFromRequest = request.body;
+    const animalFromRequest = request.body.animal;
 
     // TODO: create error responses when the body don't have the full data. with a 400 status code
 

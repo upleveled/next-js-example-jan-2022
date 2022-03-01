@@ -46,16 +46,18 @@ export default function About() {
       return;
     }
 
-    const createResponse = await fetch(`/api/animals/`, {
+    const createResponse = await fetch(`/api/animals`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        firstName: name,
-        age: age,
-        type: type,
-        accessory: accessory,
+        animal: {
+          firstName: name,
+          age: age,
+          type: type,
+          accessory: accessory,
+        },
       }),
     });
 
@@ -83,9 +85,11 @@ export default function About() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        firstName: nameOnEdit,
-        age: ageOnEdit,
-        type: typeOnEdit,
+        animal: {
+          firstName: nameOnEdit,
+          age: ageOnEdit,
+          type: typeOnEdit,
+        },
       }),
     });
     const putResponseBody = (await putResponse.json()) as AnimalResponseBody;
