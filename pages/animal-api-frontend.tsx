@@ -13,7 +13,7 @@ export default function About() {
   const [accessory, setAccessory] = useState('');
 
   // State Variable with the id of the animal on editMode
-  const [idEditAnimalId, setOnEditAnimalId] = useState<number>();
+  const [idEditAnimalId, setIdEditAnimalId] = useState<number>();
   // State Variables for the on Edit inputs
   const [nameOnEdit, setNameOnEdit] = useState('');
   const [ageOnEdit, setAgeOnEdit] = useState(1);
@@ -208,7 +208,7 @@ export default function About() {
             {isDisabled ? (
               <button
                 onClick={() => {
-                  setOnEditAnimalId(animal.id);
+                  setIdEditAnimalId(animal.id);
                   setNameOnEdit(animal.firstName);
                   setAgeOnEdit(animal.age);
                   setTypeOnEdit(animal.type);
@@ -220,7 +220,7 @@ export default function About() {
               <button
                 onClick={() => {
                   updateAnimal(animal.id).catch(() => {});
-                  setOnEditAnimalId(undefined);
+                  setIdEditAnimalId(undefined);
                 }}
               >
                 Save
