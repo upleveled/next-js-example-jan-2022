@@ -3,15 +3,8 @@ import { GetServerSidePropsContext } from 'next';
 import { useEffect } from 'react';
 import { deleteSessionByToken } from '../util/database';
 
-type Props = {
-  refreshUserProfile: () => void;
-  userObject: { username: string };
-};
-export default function Logout(props: Props) {
-  useEffect(() => {
-    props.refreshUserProfile();
-  }, [props]);
-  return 'Logged out';
+export default function Logout() {
+  return null;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
