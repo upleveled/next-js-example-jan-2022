@@ -5,7 +5,10 @@ import { Animal } from '../util/database';
 import { AnimalsResponseBodyGet } from './api/animals';
 import { AnimalResponseBody } from './api/animals/[animalId]';
 
-export default function About(props) {
+type Props = {
+  userObject: { username: string };
+};
+export default function About(props: Props) {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [name, setName] = useState('');
   const [age, setAge] = useState(1);
