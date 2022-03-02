@@ -12,7 +12,12 @@ const divStyle = (darkMode: boolean) => {
     color: ${darkMode ? 'black' : 'white'};
   `;
 };
-export default function Home() {
+
+type Props = {
+  refreshUserProfile: () => void;
+  userObject: { username: string };
+};
+export default function Home(props: Props) {
   // store this in a place that is persistent to page reload
 
   // if localStorage is undefined or darkMode dont exist is going to return false
@@ -45,11 +50,12 @@ export default function Home() {
   // update state to the value of the localStorage as soon as the page is rendered
   useEffect(() => {
     const myDarkMode = getLocalStorage('darkMode') || false;
+    props.refreshUserProfile();
     setDarkMode(myDarkMode);
-  }, []);
+  }, [props]);
 
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>Home</title>
         <meta name="description" content="Welcome to my website" />

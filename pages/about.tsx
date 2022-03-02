@@ -1,9 +1,12 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 
-export default function About() {
+type Props = {
+  userObject: { username: string };
+};
+export default function About(props: Props) {
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>About</title>
         <meta name="description" content="About the team" />

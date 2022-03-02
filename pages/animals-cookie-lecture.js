@@ -102,7 +102,7 @@ export default function AnimalsCookieLecture(props) {
   }
 
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>Animals</title>
         <meta

@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '../components/Layout';
+import { getValidSessionByToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
 const errorStyles = css`
@@ -10,15 +12,18 @@ const errorStyles = css`
 `;
 
 type Errors = { message: string }[];
-
-export default function Register() {
+type Props = {
+  refreshUserProfile: () => void;
+  userObject: { username: string };
+};
+export default function Register(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
   const router = useRouter();
 
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>Register</title>
         <meta name="description" content="Register on this website" />
@@ -48,6 +53,7 @@ export default function Register() {
             return;
           }
 
+          props.refreshUserProfile();
           await router.push('/');
         }}
       >
@@ -76,4 +82,30 @@ export default function Register() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // 1. check if there is a token and is valid from the cookie
+  const token = context.req.cookies.sessionToken;
+
+  if (token) {
+    // 2. check if the token its valid and redirect
+    const session = await getValidSessionByToken(token);
+
+    if (session) {
+      console.log(session);
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+  }
+
+  // 3. otherwise render the page
+
+  return {
+    props: {},
+  };
 }

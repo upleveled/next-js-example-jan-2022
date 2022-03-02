@@ -10,7 +10,7 @@ type Props = {
 
 export default function SingleAnimal(props: Props) {
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>
           {props.animal.firstName} ({props.animal.type})

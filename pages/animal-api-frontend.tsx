@@ -123,7 +123,7 @@ export default function About() {
 
   if (error) {
     return (
-      <Layout>
+      <Layout userObject={props.userObject}>
         <Head>
           <title>Error</title>
           <meta name="description" content="This is the frontend of my api" />
@@ -136,7 +136,7 @@ export default function About() {
   }
 
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>Api Frontend</title>
         <meta name="description" content="This is the frontend of my api" />

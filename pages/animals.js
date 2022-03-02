@@ -24,7 +24,7 @@ export default function Animals(props) {
   // }, []);
 
   return (
-    <Layout>
+    <Layout userObject={props.userObject}>
       <Head>
         <title>Animals</title>
         <meta

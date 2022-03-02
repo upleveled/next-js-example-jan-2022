@@ -17,7 +17,8 @@ const headerStyles = css`
   }
 `;
 
-export default function Header() {
+export default function Header(props) {
+  console.log(props);
   return (
     <header css={headerStyles}>
       <div>
@@ -39,7 +40,17 @@ export default function Header() {
         <Link href="/animal-api-frontend">
           <a data-test-id="header-management-link">API Frontend</a>
         </Link>
+        <Link href="/animal-api-frontend">
+          <a data-test-id="header-management-link">API Frontend</a>
+        </Link>
+        <Link href="/users/protected-user">
+          <a data-test-id="header-management-link">Protected-User</a>
+        </Link>
       </div>
+      {props.userObject && <div>{props.userObject.username}</div>}
+      <Link href="/logout">
+        <a>Logout</a>
+      </Link>
       <Link href="/login">
         <a>Login</a>
       </Link>

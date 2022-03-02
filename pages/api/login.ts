@@ -1,6 +1,12 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserWithPasswordHashByUsername, User } from '../../util/database';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
+import {
+  createSession,
+  getUserWithPasswordHashByUsername,
+  User,
+} from '../../util/database';
 
 type LoginRequestBody = {
   username: string;
@@ -67,12 +73,28 @@ export default async function loginHandler(
       return; // Important: will prevent "Headers already sent" error
     }
 
-    // TODO: Return created session in cookie
-    response.status(201).json({
-      user: {
-        id: userWithPasswordHash.id,
-      },
-    });
+    // 1. Create a unique token
+    const token = crypto.randomBytes(64).toString('base64');
+
+    // 2. Create the session
+    const session = await createSession(token, userWithPasswordHash.id);
+
+    console.log(session);
+
+    // 3. Serialize the cookie
+    const serializedCookie = await createSerializedRegisterSessionTokenCookie(
+      session.token,
+    );
+
+    // 4. Add the cookie to the header response
+    response
+      .status(201)
+      .setHeader('Set-Cookie', serializedCookie)
+      .json({
+        user: {
+          id: userWithPasswordHash.id,
+        },
+      });
     return;
   }
 
