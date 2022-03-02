@@ -1,6 +1,5 @@
 import { serialize } from 'cookie';
 import { GetServerSidePropsContext } from 'next';
-import { useEffect } from 'react';
 import { deleteSessionByToken } from '../util/database';
 
 export default function Logout() {
