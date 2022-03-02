@@ -58,7 +58,13 @@ export default function Login(props: Props) {
           const returnTo = router.query.returnTo;
           console.log('returnTo', returnTo);
 
-          if (returnTo && !Array.isArray(returnTo)) {
+          if (
+            returnTo &&
+            !Array.isArray(returnTo) &&
+            // Security: Validate returnTo parameter against valid path
+            // (because this is untrusted user input)
+            /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
+          ) {
             await router.push(returnTo);
             return;
           }
