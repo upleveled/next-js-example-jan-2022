@@ -6,6 +6,7 @@ import { Animal, getAnimalById } from '../../util/database';
 
 type Props = {
   animal: Animal;
+  userObject: { username: string };
 };
 
 export default function SingleAnimal(props: Props) {
