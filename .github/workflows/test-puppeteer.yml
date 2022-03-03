@@ -39,5 +39,7 @@ jobs:
       - run: yarn migrate up
       # Build the Next.js application
       - run: yarn build
+        env:
+          CSRF_SECRET_SALT: ${{ secrets.CSRF_SECRET_SALT }}
       # Run the Jest unit tests
       - run: yarn jest --config integration/jest.config.mjs
