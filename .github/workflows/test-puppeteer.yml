@@ -13,6 +13,7 @@ jobs:
       PGDATABASE: next_js_example_jan_2022
       PGUSERNAME: next_js_example_jan_2022
       PGPASSWORD: next_js_example_jan_2022
+      CSRF_SECRET_SALT: ${{ secrets.CSRF_SECRET_SALT }}
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
         run: |
@@ -39,7 +40,5 @@ jobs:
       - run: yarn migrate up
       # Build the Next.js application
       - run: yarn build
-        env:
-          CSRF_SECRET_SALT: ${{ secrets.CSRF_SECRET_SALT }}
       # Run the Jest unit tests
       - run: yarn jest --config integration/jest.config.mjs
