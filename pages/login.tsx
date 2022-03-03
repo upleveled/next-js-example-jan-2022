@@ -95,7 +95,6 @@ export default function Login(props: Props) {
         </label>
         <button>Login</button>
       </form>
-
       <div css={errorStyles}>
         {errors.map((error) => {
           return <div key={`error-${error.message}`}>{error.message}</div>;
