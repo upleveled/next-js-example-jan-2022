@@ -1,5 +1,6 @@
-import { css } from '@emotion/react';
+import { css, Interpolation, Theme } from '@emotion/react';
 import Link from 'next/link';
+import { AnchorHTMLAttributes } from 'react';
 import { User } from '../util/database';
 
 const headerStyles = css`
@@ -21,6 +22,15 @@ const headerStyles = css`
 type Props = {
   userObject?: User;
 };
+
+function Anchor({
+  children,
+  ...restProps
+}: AnchorHTMLAttributes<HTMLAnchorElement> & {
+  css?: Interpolation<Theme>;
+}) {
+  return <a {...restProps}>{children}</a>;
+}
 
 export default function Header(props: Props) {
   console.log(props);
@@ -55,7 +65,7 @@ export default function Header(props: Props) {
       {props.userObject && <div>{props.userObject.username}</div>}
 
       {props.userObject ? (
-        <a href="/logout">Logout</a>
+        <Anchor href="/logout">Logout</Anchor>
       ) : (
         <>
           <Link href="/login">
