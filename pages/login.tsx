@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '../components/Layout';
+import { createCsrfToken } from '../util/auth';
 import { getValidSessionByToken } from '../util/database';
 import { LoginResponseBody } from './api/login';
 
@@ -16,7 +17,9 @@ type Errors = { message: string }[];
 type Props = {
   refreshUserProfile: () => void;
   userObject: { username: string };
+  csrfToken: string;
 };
+
 export default function Login(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +37,6 @@ export default function Login(props: Props) {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-
           const loginResponse = await fetch('/api/login', {
             method: 'POST',
             headers: {
@@ -43,6 +45,7 @@ export default function Login(props: Props) {
             body: JSON.stringify({
               username: username,
               password: password,
+              csrfToken: props.csrfToken,
             }),
           });
 
@@ -103,6 +106,20 @@ export default function Login(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/login`,
+        permanent: true,
+      },
+    };
+  }
+
   // 1. check if there is a token and is valid from the cookie
   const token = context.req.cookies.sessionToken;
 
@@ -121,9 +138,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  // 3. otherwise render the page
-
+  // 3. Otherwise, generate CSRF token and render the page
   return {
-    props: {},
+    props: {
+      csrfToken: createCsrfToken(),
+    },
   };
 }

@@ -14,7 +14,6 @@ const divStyle = (darkMode: boolean) => {
 };
 
 type Props = {
-  refreshUserProfile: () => void;
   userObject: { username: string };
 };
 export default function Home(props: Props) {
@@ -50,9 +49,8 @@ export default function Home(props: Props) {
   // update state to the value of the localStorage as soon as the page is rendered
   useEffect(() => {
     const myDarkMode = getLocalStorage('darkMode') || false;
-    props.refreshUserProfile();
     setDarkMode(myDarkMode);
-  }, [props]);
+  }, []);
 
   return (
     <Layout userObject={props.userObject}>

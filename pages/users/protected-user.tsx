@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import Layout from '../../components/Layout';
-import { getUserById, getValidSessionByToken } from '../../util/database';
+import { getUserByValidSessionToken } from '../../util/database';
 
 type Props = {
   userObject: { username: string };
@@ -17,26 +17,18 @@ export default function ProtectedUser(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // 1. check if there is a token and is valid from the cookie
+  // 1. Get a user from the cookie sessionToken
   const token = context.req.cookies.sessionToken;
+  const user = await getUserByValidSessionToken(token);
 
-  if (token) {
-    // 2. check if the token its valid and redirect
-    const session = await getValidSessionByToken(token);
-
-    if (session) {
-      const user = await getUserById(session.userId);
-
-      console.log(user);
-
-      return {
-        props: { user: user },
-      };
-    }
+  // 2. If there is a user, return that and render page
+  if (user) {
+    return {
+      props: { user: user },
+    };
   }
 
-  // 3. otherwise render the page
-
+  // 3. Otherwise redirect to login
   return {
     redirect: {
       destination: `/login?returnTo=/users/protected-user`,

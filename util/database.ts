@@ -218,6 +218,23 @@ export async function getUserById(id: number) {
   return user && camelcaseKeys(user);
 }
 
+export async function getUserByValidSessionToken(token: string | undefined) {
+  if (!token) return undefined;
+  const [user] = await sql<[User | undefined]>`
+    SELECT
+      users.id,
+      users.username
+    FROM
+      users,
+      sessions
+    WHERE
+      sessions.token = ${token} AND
+      sessions.user_id = users.id AND
+      sessions.expiry_timestamp > now()
+  `;
+  return user && camelcaseKeys(user);
+}
+
 export async function getUserByUsername(username: string) {
   const [user] = await sql<[{ id: number } | undefined]>`
     SELECT id FROM users WHERE username = ${username}
@@ -258,16 +275,33 @@ type Session = {
   userId: number;
 };
 
+export async function getValidSessionByToken(token: string | undefined) {
+  if (!token) return undefined;
+  const [session] = await sql<[Session | undefined]>`
+    SELECT
+      *
+    FROM
+      sessions
+    WHERE
+      token = ${token} AND
+      expiry_timestamp > now()
+  `;
+
+  await deleteExpiredSessions();
+
+  return session && camelcaseKeys(session);
+}
+
 export async function createSession(token: string, userId: number) {
   const [session] = await sql<[Session]>`
-  INSERT INTO sessions
-    (token, user_id)
-  VALUES
-    (${token}, ${userId})
-  RETURNING
-   id,
-   token
-`;
+    INSERT INTO sessions
+      (token, user_id)
+    VALUES
+      (${token}, ${userId})
+    RETURNING
+      id,
+      token
+  `;
 
   await deleteExpiredSessions();
 
@@ -276,12 +310,12 @@ export async function createSession(token: string, userId: number) {
 
 export async function deleteSessionByToken(token: string) {
   const [session] = await sql<[Session | undefined]>`
-  DELETE FROM
-  sessions
-  WHERE
-    token = ${token}
-  RETURNING *
-`;
+    DELETE FROM
+      sessions
+    WHERE
+      token = ${token}
+    RETURNING *
+  `;
   return session && camelcaseKeys(session);
 }
 
@@ -295,19 +329,4 @@ export async function deleteExpiredSessions() {
   `;
 
   return sessions.map((session) => camelcaseKeys(session));
-}
-
-export async function getValidSessionByToken(token: string) {
-  const [session] = await sql<[Session | undefined]>`
-  SELECT
-   *
-  FROM
-    sessions
-  WHERE
-  token = ${token}
-`;
-
-  await deleteExpiredSessions();
-
-  return session && camelcaseKeys(session);
 }
