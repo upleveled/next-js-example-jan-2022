@@ -18,7 +18,7 @@ type AnimalNextApiRequest = Omit<NextApiRequest, 'body'> & {
 
 export type AnimalResponseBody = { error: string } | { animal: Animal };
 
-export default async function handler(
+export default async function animalHandler(
   request: AnimalNextApiRequest,
   response: NextApiResponse<AnimalResponseBody>,
 ) {
